@@ -1,4 +1,4 @@
-# Colonel
+# [Colonel](https://youtu.be/0Xb-oLS-cyY?t=18)
 
 Colonel is intended to provide functions that could be imagined in Kernel but aren't there.
 

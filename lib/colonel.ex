@@ -1,19 +1,7 @@
 defmodule Colonel do
   @moduledoc """
-  Documentation for `Colonel`.
+  Colonel provides functions that could be imagined in `Kernel` but aren't there.
+
+  Functions will end up in this module after being proven in `Colonel.Experimental`.
   """
-
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Colonel.hello()
-      :world
-
-  """
-  @spec hello() :: :world
-  def hello do
-    :world
-  end
 end

@@ -1,6 +1,6 @@
 # Colonel
 
-**TODO: Add description**
+Colonel is intended to provide functions that could be imagined in Kernel but aren't there.
 
 ## Installation
 

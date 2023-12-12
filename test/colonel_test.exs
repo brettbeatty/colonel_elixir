@@ -1,5 +1,5 @@
 defmodule ColonelTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Colonel
 
   test "greets the world" do

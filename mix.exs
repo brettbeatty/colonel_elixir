@@ -12,7 +12,7 @@ defmodule Colonel.MixProject do
       deps: deps(),
       docs: [
         main: "readme",
-        extras: ["README.md"]
+        extras: ["README.md", "CHANGELOG.md"]
       ]
     ]
   end

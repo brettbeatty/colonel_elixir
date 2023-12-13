@@ -54,14 +54,6 @@ Not without combining with [then/2](https://hexdocs.pm/elixir/Kernel.html#then/2
 
 I like to imagine a construct that makes it easy to make conditional changes to a value in a pipeline.
 
-### Named Operators
-
-Operators look great inline, but if you're piping values with `|>` calling operators you either end up with strange
-steps like `|> Kernel.+(1)`, or you use [then/2](https://hexdocs.pm/elixir/Kernel.html#then/2) to build anonymous
-wrappers like `|> then(fn x -> x + 1 end)`.
-
-It would sometimes be nice to have named operators so you could just make calls like `|> add(1)`.
-
 ### Function Wrapper
 
 I sometimes find myself wanting to build anonymous functions that return already-known values. Often these functions are

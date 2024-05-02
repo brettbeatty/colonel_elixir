@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 (Unreleased)
+## 0.1.0 (2024-05-02)
 
 ### Named Aliases for Operators
 
@@ -32,3 +32,7 @@ Colonel 0.1.0 introduces to `Colonel.Experimental` a number of aliases for commo
 `strictly_equal?(left, right)`        | `left === right`
 `strictly_inequal?(left, right)`      | `left !== right`
 `subtract(left, right)`               | `left - right`
+
+### Recursive Anonymous Functions
+
+Anonymous functions can't reference themselves without taking a function as an argument and being called with it. `Colonel.Experimental.recursive/1` takes care of that boilerplate to make recursive anonymous functions.

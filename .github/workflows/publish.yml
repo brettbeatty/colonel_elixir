@@ -9,12 +9,22 @@ on:
       - "*"
 jobs:
   check:
+    name: Check
     uses: ./.github/workflows/check.yml
   publish:
     runs-on: ubuntu-latest
     name: Publish
     needs: [check]
+    strategy:
+      matrix:
+        elixir_version: [1.16]
+        otp_version: [26]
     steps:
+      - name: Install Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir_version }}
+          otp-version: ${{ matrix.otp_version }}
       - name: Check out repository
         uses: actions/checkout@v4
       - name: Publish to Hex.pm

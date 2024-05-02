@@ -1,9 +1,5 @@
 name: Publish
 on:
-  # TODO remove once finished
-  pull_request:
-    branches:
-      - main
   push:
     tags:
       - "*"
@@ -40,4 +36,6 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-build-${{ hashFiles('mix.lock') }}
           fail-on-cache-miss: true
       - name: Publish to Hex.pm
+        env:
+          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
         run: mix hex.publish

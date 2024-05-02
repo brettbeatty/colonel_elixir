@@ -1,18 +1,28 @@
 defmodule Colonel.MixProject do
   use Mix.Project
 
+  @source_url "https://github.com/brettbeatty/colonel_elixir"
+
   def project do
     [
       app: :colonel,
-      name: "Colonel",
       version: "0.1.0",
-      elixir: "~> 1.15",
-      source_url: "https://github.com/brettbeatty/colonel_elixir",
+      elixir: "~> 1.13",
+      source_url: @source_url,
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      name: "Colonel",
+      description: "Supplements Kernel module",
       docs: [
         main: "readme",
         extras: ["README.md", "CHANGELOG.md"]
+      ],
+      package: [
+        licenses: ["Apache-2.0"],
+        links: %{"GitHub" => @source_url}
+      ],
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plt/project.plt"}
       ]
     ]
   end

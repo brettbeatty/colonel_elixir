@@ -1,0 +1,41 @@
+name: Publish
+on:
+  push:
+    tags:
+      - "*"
+jobs:
+  check:
+    name: Check
+    uses: ./.github/workflows/check.yml
+  publish:
+    runs-on: ubuntu-latest
+    name: Publish
+    needs: [check]
+    strategy:
+      matrix:
+        elixir_version: [1.16]
+        otp_version: [26]
+    steps:
+      - name: Install Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir_version }}
+          otp-version: ${{ matrix.otp_version }}
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Restore dependencies from cache
+        uses: actions/cache/restore@v4
+        with:
+          path: deps
+          key: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-deps-${{ hashFiles('mix.lock') }}
+          fail-on-cache-miss: true
+      - name: Restore build from cache
+        uses: actions/cache/restore@v4
+        with:
+          path: _build
+          key: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-build-${{ hashFiles('mix.lock') }}
+          fail-on-cache-miss: true
+      - name: Publish to Hex.pm
+        env:
+          HEX_API_KEY: ${{ secrets.HEX_API_KEY }}
+        run: mix hex.publish

@@ -1,0 +1,72 @@
+name: Check
+on:
+  workflow_call: {}
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    name: OTP ${{ matrix.otp_version }} / Elixir ${{ matrix.elixir_version }}
+    strategy:
+      matrix:
+        elixir_version: [1.13, 1.14, 1.15, 1.16]
+        otp_version: [24, 25, 26]
+        exclude:
+          - elixir_version: 1.13
+            otp_version: 26
+    steps:
+      - name: Install Elixir
+        uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{ matrix.elixir_version }}
+          otp-version: ${{ matrix.otp_version }}
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Cache dependencies
+        id: deps_cache
+        uses: actions/cache@v4
+        with:
+          path: deps
+          key: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-deps-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-deps-
+          save-always: true
+      - name: Install dependencies
+        if: steps.deps_cache.outputs.cahce-hit != 'true'
+        run: mix deps.get
+      - name: Cache build
+        uses: actions/cache@v4
+        with:
+          path: _build
+          key: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-build-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-build-
+          save-always: true
+      - name: Run tests
+        run: mix test
+      - name: Run credo checks
+        run: mix credo --strict
+      - name: Check formatted
+        run: mix format --check-formatted
+      - name: Cache PLTs
+        id: plt_cache
+        uses: actions/cache@v4
+        with:
+          path: priv/plt
+          key: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-plt-${{ hashFiles('mix.lock') }}
+          restore-keys: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-plt-
+          save-always: true
+      - name: Build PLTs
+        if: steps.plt_cache.outputs.cache-hit != 'true'
+        run: mix dialyzer --plt
+      - name: Run dialyzer
+        run: mix dialyzer --format github
+      - name: Build prod
+        env:
+          MIX_ENV: prod
+        run: mix compile

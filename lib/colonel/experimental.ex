@@ -318,44 +318,56 @@ defmodule Colonel.Experimental do
   defmacro recursive(fun) do
     {:fn, meta, clauses} = fun
 
-    arity =
-      case hd(clauses) do
-        {:->, _clause_meta, [[{:when, _guard_meta, args}], _body]} when is_list(args) ->
-          length(args) - 1
-
-        {:->, _clause_meta, [args, _body]} when is_list(args) ->
-          length(args)
-      end
-
     self_fun = Macro.unique_var(:self_fun, __MODULE__)
-    wrapper_args = Macro.generate_unique_arguments(arity, __MODULE__)
 
     new_clauses =
-      Enum.map(clauses, fn {:->, clause_meta, [args_or_guard, body]} ->
-        new_args_or_guard =
-          case args_or_guard do
-            [{:when, guard_meta, args}] when is_list(args) ->
-              [{:when, guard_meta, [self_fun | args]}]
-
-            args when is_list(args) ->
-              [self_fun | args]
-          end
-
-        new_body =
-          Macro.prewalk(body, fn quoted_expression ->
-            with {:super, call_meta, args} <- quoted_expression do
-              {{:., [], [self_fun]}, call_meta, [self_fun | args]}
-            end
-          end)
-
-        {:->, clause_meta, [new_args_or_guard, new_body]}
+      Enum.map(clauses, fn {:->, clause_meta, [args, body]} ->
+        new_args = put_fn_clause_arg(args, self_fun)
+        new_body = replace_fn_super(body, self_fun)
+        {:->, clause_meta, [new_args, new_body]}
       end)
+
+    wrapper_args =
+      fun
+      |> fn_arity()
+      |> Macro.generate_unique_arguments(__MODULE__)
 
     quote do
       fn unquote_splicing(wrapper_args) ->
         fun = unquote({:fn, meta, new_clauses})
         fun.(fun, unquote_splicing(wrapper_args))
       end
+    end
+  end
+
+  @spec put_fn_clause_arg(Macro.t(), Macro.t()) :: Macro.t()
+  defp put_fn_clause_arg(args_or_guard, arg) do
+    case args_or_guard do
+      [{:when, meta, args}] when is_list(args) ->
+        [{:when, meta, [arg | args]}]
+
+      args when is_list(args) ->
+        [arg | args]
+    end
+  end
+
+  @spec replace_fn_super(Macro.t(), Macro.t()) :: Macro.t()
+  defp replace_fn_super(body, fun) do
+    Macro.prewalk(body, fn quoted_expression ->
+      with {:super, call_meta, args} <- quoted_expression do
+        {{:., [], [fun]}, call_meta, [fun | args]}
+      end
+    end)
+  end
+
+  @spec fn_arity(Macro.t()) :: arity()
+  defp fn_arity({:fn, _meta, clauses}) do
+    case hd(clauses) do
+      {:->, _clause_meta, [[{:when, _guard_meta, args}], _body]} when is_list(args) ->
+        length(args) - 1
+
+      {:->, _clause_meta, [args, _body]} when is_list(args) ->
+        length(args)
     end
   end
 

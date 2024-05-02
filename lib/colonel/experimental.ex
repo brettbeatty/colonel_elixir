@@ -298,6 +298,68 @@ defmodule Colonel.Experimental do
   end
 
   @doc """
+  Build a recursive anonymous function.
+
+  This macro must be passed the function in the `fn` syntax.
+
+  Generated functions can call themselves using `super`.
+
+  ## Examples
+
+      iex> reverse = recursive fn
+      ...>   [], acc -> acc
+      ...>   [head | tail], acc -> super(tail, [head | acc])
+      ...> end
+      iex> reverse.([1, 2, 3], [])
+      [3, 2, 1]
+
+  """
+  @doc since: "0.1.0"
+  defmacro recursive(fun) do
+    {:fn, meta, clauses} = fun
+
+    arity =
+      case hd(clauses) do
+        {:->, _clause_meta, [[{:when, _guard_meta, args}], _body]} when is_list(args) ->
+          length(args) - 1
+
+        {:->, _clause_meta, [args, _body]} when is_list(args) ->
+          length(args)
+      end
+
+    self_fun = Macro.unique_var(:self_fun, __MODULE__)
+    wrapper_args = Macro.generate_unique_arguments(arity, __MODULE__)
+
+    new_clauses =
+      Enum.map(clauses, fn {:->, clause_meta, [args_or_guard, body]} ->
+        new_args_or_guard =
+          case args_or_guard do
+            [{:when, guard_meta, args}] when is_list(args) ->
+              [{:when, guard_meta, [self_fun | args]}]
+
+            args when is_list(args) ->
+              [self_fun | args]
+          end
+
+        new_body =
+          Macro.prewalk(body, fn quoted_expression ->
+            with {:super, call_meta, args} <- quoted_expression do
+              {{:., [], [self_fun]}, call_meta, [self_fun | args]}
+            end
+          end)
+
+        {:->, clause_meta, [new_args_or_guard, new_body]}
+      end)
+
+    quote do
+      fn unquote_splicing(wrapper_args) ->
+        fun = unquote({:fn, meta, new_clauses})
+        fun.(fun, unquote_splicing(wrapper_args))
+      end
+    end
+  end
+
+  @doc """
   Translates to `left === right`.
 
   ## Examples

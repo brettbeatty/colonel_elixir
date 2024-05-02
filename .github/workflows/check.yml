@@ -15,16 +15,8 @@ jobs:
     name: OTP ${{ matrix.otp_version }} / Elixir ${{ matrix.elixir_version }}
     strategy:
       matrix:
-        elixir_version:
-          - '1.13'
-          - '1.14'
-          - '1.15'
-          - '1.16'
-        otp_version:
-          - '23.3'
-          - '24.3'
-          - '25.3'
-          - '26.2'
+        elixir_version: [1.13, 1.14, 1.15, 1.16]
+        otp_version: [24, 25, 26]
     steps:
       - name: Install Elixir
         uses: erlef/setup-beam@v1

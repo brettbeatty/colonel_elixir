@@ -13,6 +13,9 @@ defmodule Colonel.MixProject do
       docs: [
         main: "readme",
         extras: ["README.md", "CHANGELOG.md"]
+      ],
+      dialyzer: [
+        plt_file: {:no_warn, "priv/plt/project.plt"}
       ]
     ]
   end

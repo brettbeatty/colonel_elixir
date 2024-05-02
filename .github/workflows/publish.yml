@@ -27,5 +27,17 @@ jobs:
           otp-version: ${{ matrix.otp_version }}
       - name: Check out repository
         uses: actions/checkout@v4
+      - name: Restore dependencies from cache
+        uses: actions/cache/restore@v4
+        with:
+          path: deps
+          key: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-deps-${{ hashFiles('mix.lock') }}
+          fail-on-cache-miss: true
+      - name: Restore build from cache
+        uses: actions/cache/restore@v4
+        with:
+          path: _build
+          key: ${{ runner.os }}-${{ matrix.otp_version }}-${{ matrix.elixir_version }}-build-${{ hashFiles('mix.lock') }}
+          fail-on-cache-miss: true
       - name: Publish to Hex.pm
         run: mix hex.publish

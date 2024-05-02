@@ -11,12 +11,20 @@ concurrency:
   cancel-in-progress: true
 jobs:
   check:
-    name: Check
     runs-on: ubuntu-latest
+    name: OTP ${{ matrix.otp_version }} / Elixir ${{ matrix.elixir_version }}
     strategy:
       matrix:
-        elixir_version: [1.13.4, 1.14.5, 1.15.7, 1.16.2]
-        otp_version: [23.3.4, 24.3.4, 25.3.2, 26.2.4]
+        elixir_version:
+          - 1.13
+          - 1.14
+          - 1.15
+          - 1.16
+        otp_version:
+          - 23.3
+          - 24.3
+          - 25.3
+          - 26.2
     steps:
       - name: Install Elixir
         uses: erlef/setup-beam@v1

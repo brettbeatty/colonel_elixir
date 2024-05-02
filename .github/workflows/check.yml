@@ -16,15 +16,15 @@ jobs:
     strategy:
       matrix:
         elixir_version:
-          - 1.13
-          - 1.14
-          - 1.15
-          - 1.16
+          - '1.13'
+          - '1.14'
+          - '1.15'
+          - '1.16'
         otp_version:
-          - 23.3
-          - 24.3
-          - 25.3
-          - 26.2
+          - '23.3'
+          - '24.3'
+          - '25.3'
+          - '26.2'
     steps:
       - name: Install Elixir
         uses: erlef/setup-beam@v1

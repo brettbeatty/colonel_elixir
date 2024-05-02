@@ -1,0 +1,20 @@
+name: Publish
+on:
+  # TODO remove once finished
+  pull_request:
+    branches:
+      - main
+  push:
+    tags:
+      - "*"
+jobs:
+  check:
+    uses: ./.github/workflows/check.yml
+  publish:
+    name: Publish
+    needs: [check]
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Publish to Hex.pm
+        run: mix hex.publish

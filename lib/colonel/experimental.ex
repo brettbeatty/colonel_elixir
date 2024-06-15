@@ -143,6 +143,61 @@ defmodule Colonel.Experimental do
   end
 
   @doc """
+  Does the same thing as `inspect/2` but returns IO data instead of a string.
+
+  See ["`iodata` and `chardata`"](`e:elixir:io-and-the-file-system.html#iodata-and-chardata`).
+
+  ## Examples
+
+      iex> iodata_inspect(:foo)
+      [":foo"]
+
+      iex> iodata_inspect([1, 2, 3, 4, 5], limit: 3)
+      ["[", "1", ",", " ", "2", ",", " ", "3", ",", " ", "...", "]"]
+
+      iex> iodata_inspect([1, 2, 3], pretty: true, width: 0)
+      ["[", "1", ",", "\\n ", "2", ",", "\\n ", "3", "]"]
+
+      iex> iodata_inspect("olá" <> <<0>>)
+      ["<<", "111", ",", " ", "108", ",", " ", "195", ",", " ", "161", ",", " ", "0", ">>"]
+
+      iex> iodata_inspect("olá" <> <<0>>, binaries: :as_strings)
+      [~S("olá\\0")]
+
+      iex> iodata_inspect("olá", binaries: :as_binaries)
+      ["<<", "111", ",", " ", "108", ",", " ", "195", ",", " ", "161", ">>"]
+
+      iex> iodata_inspect(~c"bar")
+      [~S(~c"bar")]
+
+      iex> iodata_inspect([0 | ~c"bar"])
+      ["[", "0", ",", " ", "98", ",", " ", "97", ",", " ", "114", "]"]
+
+      iex> iodata_inspect(100, base: :octal)
+      ["0o144"]
+
+      iex> iodata_inspect(100, base: :hex)
+      ["0x64"]
+
+  """
+  @doc since: "unreleased"
+  @spec iodata_inspect(Inspect.t(), keyword()) :: iodata()
+  def iodata_inspect(term, opts \\ []) when is_list(opts) do
+    opts = Inspect.Opts.new(opts)
+
+    limit =
+      case opts.pretty do
+        true -> opts.width
+        false -> :infinity
+      end
+
+    term
+    |> Inspect.Algebra.to_doc(opts)
+    |> Inspect.Algebra.group()
+    |> Inspect.Algebra.format(limit)
+  end
+
+  @doc """
   Translates to `left < right`.
 
   ## Examples
@@ -369,6 +424,94 @@ defmodule Colonel.Experimental do
       {:->, _clause_meta, [args, _body]} when is_list(args) ->
         length(args)
     end
+  end
+
+  @doc """
+  Handles the sigil `~i` for iodata.
+
+  See ["`iodata` and `chardata`"](`e:elixir:io-and-the-file-system.html#iodata-and-chardata`).
+
+  ## Modifiers
+
+    - `s`: interpolated values should be transformed by `to_string/1` (default)
+    - `i`: interpolated values should be transformed by `iodata_inspect/1`
+    - `d`: interpolated values are already iodata/chardata and do not need transformed
+
+  Using the `~i` sigil with the `s` or `i` modifiers will always return iodata. The `d` modifier
+  allows for chardata that is not iodata by passing through interpolated chardata.
+
+  > #### The `d` modifier {: .warning}
+  >
+  > The `d` modifier does not transform interpolated values, so they will appear in the generated
+  > list as-is. This makes the operation cheaper when interpolated values are already
+  > iodata/chardata but allows construction of invalid iodata/chardata. Care should be taken when
+  > using the `d` modifier that all interpolated values are valid iodata/chardata.
+
+  ## Examples
+
+      iex> ~i"some \#{["list", ["of", "nested"], "values"]} and \#{:such}"
+      ["some ", "listofnestedvalues", " and ", "such"]
+
+      iex> ~i"some \#{["list", ["of", "nested"], "values"]} and \#{:such}"s
+      ["some ", "listofnestedvalues", " and ", "such"]
+
+      iex> ~i"some \#{["list", ["of", "nested"], "values"]} and \#{:such}"i
+      [
+        "some ",
+        [
+          "[",
+          "",
+          ~S("list"),
+          ",",
+          " ",
+          "[",
+          ~S("of"),
+          ",",
+          " ",
+          ~S("nested"),
+          "]",
+          ",",
+          " ",
+          ~S("values"),
+          "",
+          "]"
+        ],
+        " and ",
+        [":such"]
+      ]
+
+      iex> ~i"some \#{["list", ["of", "nested"], "values"]} and \#{to_string(:such)}"d
+      ["some ", ["list", ["of", "nested"], "values"], " and ", "such"]
+
+  """
+  @doc since: "unreleased"
+  defmacro sigil_i(term, modifiers) do
+    {:<<>>, _meta, parts} = term
+
+    transform =
+      case modifiers do
+        ~c"d" ->
+          fn {{:., _meta, [Kernel, :to_string]}, _meta2, [value]} -> value end
+
+        ~c"i" ->
+          fn {{:., meta, [Kernel, :to_string]}, meta2, [value]} ->
+            {{:., meta, [__MODULE__, :iodata_inspect]}, meta2, [value]}
+          end
+
+        string when string in [~c"", ~c"s"] ->
+          &Function.identity/1
+
+        _modifiers ->
+          raise ArgumentError, "modifier must be one of: s, i, d"
+      end
+
+    Enum.map(parts, fn
+      {:"::", _meta, [value, {:binary, _meta2, _context}]} ->
+        transform.(value)
+
+      string when is_binary(string) ->
+        string
+    end)
   end
 
   @doc """

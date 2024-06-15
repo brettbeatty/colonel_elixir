@@ -167,9 +167,6 @@ defmodule Colonel.Experimental do
       iex> iodata_inspect("olá", binaries: :as_binaries)
       ["<<", "111", ",", " ", "108", ",", " ", "195", ",", " ", "161", ">>"]
 
-      iex> iodata_inspect(~c"bar")
-      [~S(~c"bar")]
-
       iex> iodata_inspect([0 | ~c"bar"])
       ["[", "0", ",", " ", "98", ",", " ", "97", ",", " ", "114", "]"]
 

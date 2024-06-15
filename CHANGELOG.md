@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Iodata conveniences
+
+[Iodata and chardata](https://hexdocs.pm/elixir/io-and-the-file-system.html#iodata-and-chardata) can be cheaper than strings to build, but they're often not as nice to work with. `Colonel` now provides two conveniences for working with iodata and chardata:
+- `Colonel.Experimental.iodata_inspect/2` does what `Kernel.inspect/2` does but returns the result as iodata instead of building one string from it.
+- `Colonel.Experimental.sigil_i/2` provides an `~i` sigil for building iodata or chardata with a string interpolation syntax.
+
 ## 0.1.0 (2024-05-02)
 
 ### Named Aliases for Operators

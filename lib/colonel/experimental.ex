@@ -177,7 +177,7 @@ defmodule Colonel.Experimental do
       ["0x64"]
 
   """
-  @doc since: "unreleased"
+  @doc since: "0.2.0"
   @spec iodata_inspect(Inspect.t(), keyword()) :: iodata()
   def iodata_inspect(term, opts \\ []) when is_list(opts) do
     opts = Inspect.Opts.new(opts)
@@ -481,7 +481,7 @@ defmodule Colonel.Experimental do
       ["some ", ["list", ["of", "nested"], "values"], " and ", "such"]
 
   """
-  @doc since: "unreleased"
+  @doc since: "0.2.0"
   defmacro sigil_i(term, modifiers) do
     {:<<>>, _meta, parts} = term
     transform = sigil_i_transform(modifiers)

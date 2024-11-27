@@ -84,3 +84,42 @@ Acc.yielded(acc)
 # get accumulated value
 acc[:a]
 ```
+
+### Match Function Builder
+
+Most of the time I use `Kernel.match?/2` I am wrapping it an an anonymous function, like
+`&match?({:some, pattern}, &1)`. Seems like a `match/1` macro to return the anonymous function
+might be convenient: `match({:some, pattern})`.
+
+### Pipe-able Match Operator
+
+People like piping, and often pipes are interrupted to bind to a variable then resumed with that
+variable. I'm picturing being able to pipe into a binding like `|> match(my_var)` then use
+`my_var` deeper in the pipeline.
+
+### Secure Compare
+
+For apps that want to do timing-safe comparison of strings that might not be the same length but
+don't have a dependency on plug, should this library include a secure compare function?
+
+### Tag/Untag
+
+Pipe-able functions for wrapping/unwrapping values to/from tagged tuples.
+
+### Loop
+
+I frequently find myself reaching for recursion to do `Enum`-like operations on non-enumerables.
+I'm picturing a generalized HOF so I don't have to define functions.
+
+```elixir
+loop {5, 1}, fn
+  {1, total} -> {:halt, total}
+  {n, total} -> {:cont, {n - 1, n * total}}
+end
+#=> 120
+```
+
+### DateTime Comparison to Now
+
+Right now it takes a few steps to answer questions like "has this datetime passed?" or "was this
+datetime more than n minutes ago"? I think there could be some nice functions there.

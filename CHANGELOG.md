@@ -1,5 +1,13 @@
 # Changelog
 
+## Unpublished
+
+### Rename Inequal to Unequal
+
+"Inequal" is an archaic synonym to "unequal", so `Colonel.Experimental.inequal?/2` and
+`Colonel.Experimental.strictly_inequal?/2` are getting soft-deprecated in favor of the new
+`Colonel.Experimental.unequal?/2` and `Colonel.Experimental.strictly_unequal?/2`.
+
 ## 0.2.0 (2024-06-15)
 
 ### Iodata conveniences

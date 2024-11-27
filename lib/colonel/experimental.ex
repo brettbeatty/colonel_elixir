@@ -137,6 +137,7 @@ defmodule Colonel.Experimental do
 
   """
   @doc since: "0.1.0"
+  @doc deprecated: "Prefer `unequal?/2`"
   @spec inequal?(term(), term()) :: boolean()
   def inequal?(left, right) do
     left != right
@@ -547,8 +548,27 @@ defmodule Colonel.Experimental do
 
   """
   @doc since: "0.1.0"
+  @doc deprecated: "Prefer `strictly_unequal?/2`"
   @spec strictly_inequal?(term(), term()) :: boolean()
   def strictly_inequal?(left, right) do
+    left !== right
+  end
+
+  @doc """
+  Translates to `left !== right`.
+
+  ## Examples
+
+      iex> strictly_inequal?(1, 2)
+      true
+
+      iex> strictly_inequal?(1, 1.0)
+      true
+
+  """
+  @doc since: "unpublished"
+  @spec strictly_unequal?(term(), term()) :: boolean()
+  def strictly_unequal?(left, right) do
     left !== right
   end
 
@@ -568,5 +588,23 @@ defmodule Colonel.Experimental do
   @spec subtract(float(), integer()) :: float()
   def subtract(left, right) do
     left - right
+  end
+
+  @doc """
+  Translates to `left != right`.
+
+  ## Examples
+
+      iex> inequal?(1, 2)
+      true
+
+      iex> inequal?(1, 1.0)
+      false
+
+  """
+  @doc since: "unpublished"
+  @spec unequal?(term(), term()) :: boolean()
+  def unequal?(left, right) do
+    left != right
   end
 end

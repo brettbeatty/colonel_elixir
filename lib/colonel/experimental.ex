@@ -484,7 +484,7 @@ defmodule Colonel.Experimental do
   @doc since: "0.2.0"
   defmacro sigil_i(term, modifiers) do
     {:<<>>, _meta, parts} = term
-    transform = sigil_i_transform(modifiers)
+    transform = transform_sigil_i(modifiers)
 
     Enum.map(parts, fn
       {:"::", _meta, [value, {:binary, _meta2, _context}]} ->
@@ -495,24 +495,24 @@ defmodule Colonel.Experimental do
     end)
   end
 
-  @spec sigil_i_transform(charlist()) :: (Macro.t() -> Macro.t())
-  defp sigil_i_transform(modifiers)
+  @spec transform_sigil_i(charlist()) :: (Macro.t() -> Macro.t())
+  defp transform_sigil_i(modifiers)
 
-  defp sigil_i_transform(~c"d") do
+  defp transform_sigil_i(~c"d") do
     fn {{:., _meta, [Kernel, :to_string]}, _meta2, [value]} -> value end
   end
 
-  defp sigil_i_transform(~c"i") do
+  defp transform_sigil_i(~c"i") do
     fn {{:., meta, [Kernel, :to_string]}, meta2, [value]} ->
       {{:., meta, [__MODULE__, :iodata_inspect]}, meta2, [value]}
     end
   end
 
-  defp sigil_i_transform(modifiers) when modifiers in [~c"", ~c"s"] do
+  defp transform_sigil_i(modifiers) when modifiers in [~c"", ~c"s"] do
     &Function.identity/1
   end
 
-  defp sigil_i_transform(_modifiers) do
+  defp transform_sigil_i(_modifiers) do
     raise ArgumentError, "modifier must be one of: s, i, d"
   end
 

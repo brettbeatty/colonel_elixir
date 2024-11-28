@@ -256,6 +256,32 @@ defmodule Colonel.Experimental do
   end
 
   @doc """
+  Calls `fun` with `acc` until halted.
+
+  Function takes an acc and can return two things:
+  - `{:cont, new_acc}` results in `fun` being called with `new_acc`
+  - `{:halt, final_acc}` results in `loop/2` returning `final_acc`
+
+  ## Examples
+
+      iex> loop({5, 1}, fn
+      ...>   {1, total} -> {:halt, total}
+      ...>   {n, total} -> {:cont, {n - 1, n * total}}
+      ...> end)
+      120
+
+  """
+  @doc since: "unpublished"
+  @spec loop(acc, (acc -> {:cont, acc} | {:halt, final_acc})) :: final_acc
+        when acc: term(), final_acc: term()
+  def loop(acc, fun) do
+    case fun.(acc) do
+      {:cont, new_acc} -> loop(new_acc, fun)
+      {:halt, final_acc} -> final_acc
+    end
+  end
+
+  @doc """
   Translates to `left * right`.
 
   ## Examples

@@ -106,19 +106,6 @@ don't have a dependency on plug, should this library include a secure compare fu
 
 Pipe-able functions for wrapping/unwrapping values to/from tagged tuples.
 
-### Loop
-
-I frequently find myself reaching for recursion to do `Enum`-like operations on non-enumerables.
-I'm picturing a generalized HOF so I don't have to define functions.
-
-```elixir
-loop {5, 1}, fn
-  {1, total} -> {:halt, total}
-  {n, total} -> {:cont, {n - 1, n * total}}
-end
-#=> 120
-```
-
 ### DateTime Comparison to Now
 
 Right now it takes a few steps to answer questions like "has this datetime passed?" or "was this

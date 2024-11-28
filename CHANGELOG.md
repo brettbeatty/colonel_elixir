@@ -2,6 +2,12 @@
 
 ## Unpublished
 
+### Loops
+
+`Enum` has some great higher-order functions for working with enumerables, but they only work with
+enumerables. `Colonel.Experimental.loop/2` provides a higher-order function for more generalized
+recursion.
+
 ### Rename Inequal to Unequal
 
 "Inequal" is an archaic synonym to "unequal", so `Colonel.Experimental.inequal?/2` and

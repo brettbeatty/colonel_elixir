@@ -585,10 +585,10 @@ defmodule Colonel.Experimental do
 
   ## Examples
 
-      iex> strictly_inequal?(1, 2)
+      iex> strictly_unequal?(1, 2)
       true
 
-      iex> strictly_inequal?(1, 1.0)
+      iex> strictly_unequal?(1, 1.0)
       true
 
   """
@@ -621,10 +621,10 @@ defmodule Colonel.Experimental do
 
   ## Examples
 
-      iex> inequal?(1, 2)
+      iex> unequal?(1, 2)
       true
 
-      iex> inequal?(1, 1.0)
+      iex> unequal?(1, 1.0)
       false
 
   """

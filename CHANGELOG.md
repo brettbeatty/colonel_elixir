@@ -2,6 +2,12 @@
 
 ## Unpublished
 
+### Tag and Untag
+
+A lot of Elixir code involves tagged tuples like `{:ok, value}` and `{:error, reason}`.
+`Colonel.Experimental.tag/2` and `Colonel.Experimental.untag/2` allow for wrapping/unwrapping
+values in/from tagged tuples.
+
 ### Loops
 
 `Enum` has some great higher-order functions for working with enumerables, but they only work with

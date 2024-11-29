@@ -617,6 +617,21 @@ defmodule Colonel.Experimental do
   end
 
   @doc """
+  Create tagged tuple, wrapping `value` in a tuple with `tag`.
+
+  ## Examples
+
+      iex> tag(:cool, :ok)
+      {:ok, :cool}
+
+  """
+  @doc since: "unpublished"
+  @spec tag(value, tag) :: {tag, value} when tag: term(), value: term()
+  def tag(value, tag) do
+    {tag, value}
+  end
+
+  @doc """
   Translates to `left != right`.
 
   ## Examples
@@ -632,5 +647,24 @@ defmodule Colonel.Experimental do
   @spec unequal?(term(), term()) :: boolean()
   def unequal?(left, right) do
     left != right
+  end
+
+  @doc """
+  Unwrap tagged tuple, asserting first element is `tag` and returning the second.
+
+  ## Examples
+
+      iex> untag({:ok, :cool}, :ok)
+      :cool
+
+      iex> untag({:error, :oops}, :ok)
+      ** (MatchError) no match of right hand side value: {:error, :oops}
+
+  """
+  @doc since: "unpublished"
+  @spec untag({tag, value}, tag) :: value when tag: term(), value: term()
+  def untag(tuple, tag) do
+    {^tag, value} = tuple
+    value
   end
 end

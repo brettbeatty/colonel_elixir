@@ -102,10 +102,6 @@ variable. I'm picturing being able to pipe into a binding like `|> match(my_var)
 For apps that want to do timing-safe comparison of strings that might not be the same length but
 don't have a dependency on plug, should this library include a secure compare function?
 
-### Tag/Untag
-
-Pipe-able functions for wrapping/unwrapping values to/from tagged tuples.
-
 ### DateTime Comparison to Now
 
 Right now it takes a few steps to answer questions like "has this datetime passed?" or "was this

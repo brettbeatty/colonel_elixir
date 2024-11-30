@@ -271,7 +271,7 @@ defmodule Colonel.Experimental do
       120
 
   """
-  @doc since: "unpublished"
+  @doc since: "0.3.0"
   @spec loop(acc, (acc -> {:cont, acc} | {:halt, final_acc})) :: final_acc
         when acc: term(), final_acc: term()
   def loop(acc, fun) do
@@ -592,7 +592,7 @@ defmodule Colonel.Experimental do
       true
 
   """
-  @doc since: "unpublished"
+  @doc since: "0.3.0"
   @spec strictly_unequal?(term(), term()) :: boolean()
   def strictly_unequal?(left, right) do
     left !== right
@@ -625,7 +625,7 @@ defmodule Colonel.Experimental do
       {:ok, :cool}
 
   """
-  @doc since: "unpublished"
+  @doc since: "0.3.0"
   @spec tag(value, tag) :: {tag, value} when tag: term(), value: term()
   def tag(value, tag) do
     {tag, value}
@@ -643,7 +643,7 @@ defmodule Colonel.Experimental do
       false
 
   """
-  @doc since: "unpublished"
+  @doc since: "0.3.0"
   @spec unequal?(term(), term()) :: boolean()
   def unequal?(left, right) do
     left != right
@@ -661,7 +661,7 @@ defmodule Colonel.Experimental do
       ** (MatchError) no match of right hand side value: {:error, :oops}
 
   """
-  @doc since: "unpublished"
+  @doc since: "0.3.0"
   @spec untag({tag, value}, tag) :: value when tag: term(), value: term()
   def untag(tuple, tag) do
     {^tag, value} = tuple

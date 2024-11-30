@@ -1,6 +1,6 @@
 # Changelog
 
-## Unpublished
+## 0.3.0 (2024-11-29)
 
 ### Tag and Untag
 

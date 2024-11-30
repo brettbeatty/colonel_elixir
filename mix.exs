@@ -6,7 +6,7 @@ defmodule Colonel.MixProject do
   def project do
     [
       app: :colonel,
-      version: "0.2.0",
+      version: "0.3.0",
       elixir: "~> 1.13",
       source_url: @source_url,
       start_permanent: Mix.env() == :prod,

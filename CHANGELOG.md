@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+## Introduce support for Elixir 1.18, drop 1.13
+
+This is to stay in line with the versions of Elixir that receive security patches and the versions
+of Erlang compatible with those Elixir versions.
+
 ## 0.3.0 (2024-11-29)
 
 ### Tag and Untag

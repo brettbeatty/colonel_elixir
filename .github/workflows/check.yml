@@ -16,13 +16,9 @@ jobs:
     name: OTP ${{ matrix.otp_version }} / Elixir ${{ matrix.elixir_version }}
     strategy:
       matrix:
-        elixir_version: [1.13, 1.14, 1.15, 1.16, 1.17]
+        elixir_version: [1.14, 1.15, 1.16, 1.17, 1.18]
         otp_version: [24, 25, 26, 27]
         exclude:
-          - elixir_version: 1.13
-            otp_version: 26
-          - elixir_version: 1.13
-            otp_version: 27
           - elixir_version: 1.14
             otp_version: 27
           - elixir_version: 1.15
@@ -30,6 +26,8 @@ jobs:
           - elixir_version: 1.16
             otp_version: 27
           - elixir_version: 1.17
+            otp_version: 24
+          - elixir_version: 1.18
             otp_version: 24
     steps:
       - name: Install Elixir

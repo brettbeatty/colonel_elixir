@@ -377,6 +377,29 @@ defmodule Colonel.Experimental do
   end
 
   @doc """
+  Translates to `base ** exponent`.
+
+  ## Examples
+
+      iex> pow(2, 5)
+      32
+      iex> pow(36, 0.5)
+      6.0
+      iex> pow(4, -1)
+      0.25
+
+  """
+  @doc since: "unreleased"
+  @spec pow(integer(), non_neg_integer()) :: integer()
+  @spec pow(integer(), neg_integer()) :: float()
+  @spec pow(float(), float()) :: float()
+  @spec pow(integer(), float()) :: float()
+  @spec pow(float(), integer()) :: float()
+  def pow(base, exponent) do
+    base ** exponent
+  end
+
+  @doc """
   Build a recursive anonymous function.
 
   This macro must be passed the function in the `fn` syntax.

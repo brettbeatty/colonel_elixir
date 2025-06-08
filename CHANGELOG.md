@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Power
+
+`Colonel.Experimental` was missing an alias for `base ** exponent`, so `pow/2` was added.
+
 ## Introduce support for Elixir 1.18, drop 1.13
 
 This is to stay in line with the versions of Elixir that receive security patches and the versions

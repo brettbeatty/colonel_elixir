@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Conditional updates
+
+Because of the way variables are bound in Elixir, conditionally applying many operations to data
+can get verbose. `Colonel` now provides some pipe-friendly options for conditionally modifying
+values:
+- `Colonel.Experimental.then_if/3` is like a conditional `Kernel.then/2`
+- `Colonel.Experimental.delete_if/3` is like a conditional `Kernel.pop_in/2` that returns only the updated structure
+- `Colonel.Experimental.put_if/4` is like a conditional `Kernel.put_in/3`
+- `Colonel.Experimental.update_if/4` is like a conditional `Kernel.update_in/3`
+
 ### Power
 
 `Colonel.Experimental` was missing an alias for `base ** exponent`, so `pow/2` was added.

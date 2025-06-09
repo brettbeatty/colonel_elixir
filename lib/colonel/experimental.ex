@@ -62,6 +62,36 @@ defmodule Colonel.Experimental do
   end
 
   @doc """
+  Delete from structure if condition is met.
+
+  Uses the `Access` behaviour to perform the delete, so keys are a list as with
+  `Kernel.get_and_update_in/3` and its companions.
+
+  ## Examples
+
+      iex> delete_if(%{items: [:a, :b, :c]}, true, [:items, Access.at(1)])
+      %{items: [:a, :c]}
+
+      iex> delete_if(%{key: "value"}, false, [:key])
+      %{key: "value"}
+
+  """
+  @doc since: "unreleased"
+  @spec delete_if(data, as_boolean(term()), [
+          Access.get_and_update_fun(data, term()) | term(),
+          ...
+        ]) :: data
+        when data: Access.container()
+  def delete_if(data, condition, keys) do
+    if condition do
+      {_value, data} = pop_in(data, keys)
+      data
+    else
+      data
+    end
+  end
+
+  @doc """
   Translates to `left / right`.
 
   ## Examples
@@ -383,8 +413,10 @@ defmodule Colonel.Experimental do
 
       iex> pow(2, 5)
       32
+
       iex> pow(36, 0.5)
       6.0
+
       iex> pow(4, -1)
       0.25
 
@@ -397,6 +429,37 @@ defmodule Colonel.Experimental do
   @spec pow(float(), integer()) :: float()
   def pow(base, exponent) do
     base ** exponent
+  end
+
+  @doc """
+  Put value into structure if condition is met.
+
+  Uses the `Access` behaviour to perform the put, so keys are a list as with
+  `Kernel.get_and_update_in/3` and its companions.
+
+  ## Examples
+
+      iex> put_if(%{data: %{}}, true, [:data, :my_key], "my value")
+      %{data: %{my_key: "my value"}}
+
+      iex> put_if([], false, [:only], [:a, :b, :c])
+      []
+
+  """
+  @doc since: "unreleased"
+  @spec put_if(
+          data,
+          as_boolean(term()),
+          [Access.get_and_update_fun(data, term()) | term(), ...],
+          term()
+        ) :: data
+        when data: Access.container()
+  def put_if(data, condition, keys, value) do
+    if condition do
+      put_in(data, keys, value)
+    else
+      data
+    end
   end
 
   @doc """
@@ -655,6 +718,31 @@ defmodule Colonel.Experimental do
   end
 
   @doc """
+  Apply `fun` to `term` if `condition` is met.
+
+  Otherwise `term` is passed through as-is.
+
+  ## Examples
+
+      iex> then_if(%{}, true, &Map.put(&1, :key, "value"))
+      %{key: "value"}
+
+      iex> then_if(7, false, fn x -> x + 1 end)
+      7
+
+  """
+  @doc since: "unreleased"
+  @spec then_if(input, as_boolean(term()), (input -> output)) :: input | output
+        when input: term(), output: term()
+  def then_if(term, condition, fun) do
+    if condition do
+      fun.(term)
+    else
+      term
+    end
+  end
+
+  @doc """
   Translates to `left != right`.
 
   ## Examples
@@ -689,5 +777,36 @@ defmodule Colonel.Experimental do
   def untag(tuple, tag) do
     {^tag, value} = tuple
     value
+  end
+
+  @doc """
+  Update value in structure if condition is met.
+
+  Uses the `Access` behaviour to perform the update, so keys are a list as with
+  `Kernel.get_and_update_in/3` and its companions.
+
+  ## Examples
+
+      iex> update_if([bounds: 1..10], true, [:bounds, Access.key!(:first)], fn x -> x + 3 end)
+      [bounds: 4..10]
+
+      iex> update_if(%{limit: 7}, false, [:limit], fn limit -> limit * 2 end)
+      %{limit: 7}
+
+  """
+  @doc since: "unreleased"
+  @spec update_if(
+          data,
+          as_boolean(term()),
+          [Access.get_and_update_fun(data, current_value) | term(), ...],
+          (current_value -> term())
+        ) :: data
+        when current_value: term(), data: Access.container()
+  def update_if(data, condition, keys, fun) do
+    if condition do
+      update_in(data, keys, fun)
+    else
+      data
+    end
   end
 end

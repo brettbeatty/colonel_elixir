@@ -11,6 +11,7 @@ values:
 - `Colonel.Experimental.delete_if/3` is like a conditional `Kernel.pop_in/2` that returns only the updated structure
 - `Colonel.Experimental.put_if/4` is like a conditional `Kernel.put_in/3`
 - `Colonel.Experimental.update_if/4` is like a conditional `Kernel.update_in/3`
+- `Colonel.Experimental.then_with/3` is an alternate form for single-clause `with`
 
 ### Power
 

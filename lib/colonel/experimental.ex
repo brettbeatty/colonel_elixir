@@ -743,6 +743,29 @@ defmodule Colonel.Experimental do
   end
 
   @doc """
+  Alternate, pipe-friendly syntax for single-clause `with` expressions.
+
+  Separates pattern from the expression it matches.
+
+  ## Examples
+
+      iex> then_with({:ok, 23}, {:ok, value}, do: {:ok, to_string(value)})
+      {:ok, "23"}
+
+      iex> then_with %{}, %{value: value} = result when is_binary(value) do
+      ...>   %{result | size: byte_size(value)}
+      ...> end
+      %{}
+
+  """
+  @doc since: "unreleased"
+  defmacro then_with(expression, pattern, block) do
+    quote do
+      with unquote(pattern) <- unquote(expression), unquote(block)
+    end
+  end
+
+  @doc """
   Translates to `left != right`.
 
   ## Examples

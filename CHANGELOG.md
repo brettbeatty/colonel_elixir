@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.4.0 (2025-06-09)
 
 ### Conditional updates
 
@@ -17,7 +17,7 @@ values:
 
 `Colonel.Experimental` was missing an alias for `base ** exponent`, so `pow/2` was added.
 
-## Introduce support for Elixir 1.18, drop 1.13
+### Introduce support for Elixir 1.18, drop 1.13
 
 This is to stay in line with the versions of Elixir that receive security patches and the versions
 of Erlang compatible with those Elixir versions.

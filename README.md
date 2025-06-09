@@ -9,7 +9,7 @@ The package can be installed by adding `colonel` to your list of dependencies in
 ```elixir
 def deps do
   [
-    {:colonel, "~> 0.3.0"}
+    {:colonel, "~> 0.4.0"}
   ]
 end
 ```
@@ -19,17 +19,6 @@ end
 ### Formatted Strings
 
 Can we do anything to make [:io_lib.format/2](https://www.erlang.org/doc/man/io_lib.html#format-2) more Elixir-friendly?
-
-### Then/Tap With/If
-
-Frequently I find myself wanting to modify a value only if a condition is met. Often this means rebinding variables to
-conditional expressions.
-
-"with" expressions are convenient for modifying values only if they meet a certain condition. "if" expressions require
-an "else" to return values when the condition is not met. But neither is great for modifying values via piping with `|>`.
-Not without combining with [then/2](https://hexdocs.pm/elixir/Kernel.html#then/2).
-
-I like to imagine a construct that makes it easy to make conditional changes to a value in a pipeline.
 
 ### Function Wrapper
 
@@ -85,12 +74,6 @@ acc[:a]
 Most of the time I use `Kernel.match?/2` I am wrapping it an an anonymous function, like
 `&match?({:some, pattern}, &1)`. Seems like a `match/1` macro to return the anonymous function
 might be convenient: `match({:some, pattern})`.
-
-### Pipe-able Match Operator
-
-People like piping, and often pipes are interrupted to bind to a variable then resumed with that
-variable. I'm picturing being able to pipe into a binding like `|> match(my_var)` then use
-`my_var` deeper in the pipeline.
 
 ### Secure Compare
 

@@ -76,7 +76,7 @@ defmodule Colonel.Experimental do
       %{key: "value"}
 
   """
-  @doc since: "unreleased"
+  @doc since: "0.4.0"
   @spec delete_if(data, as_boolean(term()), [
           Access.get_and_update_fun(data, term()) | term(),
           ...
@@ -421,7 +421,7 @@ defmodule Colonel.Experimental do
       0.25
 
   """
-  @doc since: "unreleased"
+  @doc since: "0.4.0"
   @spec pow(integer(), non_neg_integer()) :: integer()
   @spec pow(integer(), neg_integer()) :: float()
   @spec pow(float(), float()) :: float()
@@ -446,7 +446,7 @@ defmodule Colonel.Experimental do
       []
 
   """
-  @doc since: "unreleased"
+  @doc since: "0.4.0"
   @spec put_if(
           data,
           as_boolean(term()),
@@ -731,7 +731,7 @@ defmodule Colonel.Experimental do
       7
 
   """
-  @doc since: "unreleased"
+  @doc since: "0.4.0"
   @spec then_if(input, as_boolean(term()), (input -> output)) :: input | output
         when input: term(), output: term()
   def then_if(term, condition, fun) do
@@ -758,7 +758,7 @@ defmodule Colonel.Experimental do
       %{}
 
   """
-  @doc since: "unreleased"
+  @doc since: "0.4.0"
   defmacro then_with(expression, pattern, block) do
     quote do
       with unquote(pattern) <- unquote(expression), unquote(block)
@@ -817,7 +817,7 @@ defmodule Colonel.Experimental do
       %{limit: 7}
 
   """
-  @doc since: "unreleased"
+  @doc since: "0.4.0"
   @spec update_if(
           data,
           as_boolean(term()),

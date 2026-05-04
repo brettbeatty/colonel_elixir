@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Don't suggest and/or aliases return booleans
+
+`Colonel.Experimental.and?/2` and `Colonel.Experimental.or?/2` may return boolean values, but they
+don't have to. If they're being used as conveniences for nil-or-not checking or otherwise expected
+to return non-boolean values, the `?` is misleading.
+
+These were deprecated in favor of the new `Colonel.Experimental.and_also/2` and
+`Colonel.Experimental.or_else/2`.
+
 ## 0.4.0 (2025-06-09)
 
 ### Conditional updates

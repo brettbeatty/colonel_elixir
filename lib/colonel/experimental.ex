@@ -40,9 +40,35 @@ defmodule Colonel.Experimental do
 
   """
   @doc since: "0.1.0"
+  @doc deprecated: "Prefer `and_also/2`"
   @spec and?(as_boolean(left), as_boolean(right)) :: as_boolean(left | right)
         when left: term(), right: term()
   def and?(left, right) do
+    left && right
+  end
+
+  @doc """
+  Translates to `left && right`.
+
+  ## Examples
+
+      iex> and_also(nil, false)
+      nil
+
+      iex> and_also(1, nil)
+      nil
+
+      iex> and_also(false, 2)
+      false
+
+      iex> and_also(true, 2)
+      2
+
+  """
+  @doc since: "unreleased"
+  @spec and_also(as_boolean(left), as_boolean(right)) :: as_boolean(left | right)
+        when left: term(), right: term()
+  def and_also(left, right) do
     left && right
   end
 
@@ -384,9 +410,35 @@ defmodule Colonel.Experimental do
 
   """
   @doc since: "0.1.0"
+  @doc deprecated: "Prefer `or_else/2`"
   @spec or?(as_boolean(left), as_boolean(right)) :: as_boolean(left | right)
         when left: term(), right: term()
   def or?(left, right) do
+    left || right
+  end
+
+  @doc """
+  Translates to `left || right`.
+
+  ## Examples
+
+      iex> or_else(nil, false)
+      false
+
+      iex> or_else(1, nil)
+      1
+
+      iex> or_else(false, 2)
+      2
+
+      iex> or_else(true, 2)
+      true
+
+  """
+  @doc since: "unreleased"
+  @spec or_else(as_boolean(left), as_boolean(right)) :: as_boolean(left | right)
+        when left: term(), right: term()
+  def or_else(left, right) do
     left || right
   end
 

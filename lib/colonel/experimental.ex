@@ -821,10 +821,14 @@ defmodule Colonel.Experimental do
 
   ## Examples
 
-      iex> then_with({:ok, 23}, {:ok, value}, do: {:ok, to_string(value)})
+      iex> {:ok, 23}
+      ...> |> then_with {:ok, value} do
+      ...>   {:ok, to_string(value)}
+      ...> end
       {:ok, "23"}
 
-      iex> then_with "value", "x" <> rest do
+      iex> "value"
+      ...> |> then_with "x" <> rest do
       ...>   rest
       ...> end
       "value"

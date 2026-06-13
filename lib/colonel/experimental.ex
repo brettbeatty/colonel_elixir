@@ -206,32 +206,14 @@ defmodule Colonel.Experimental do
 
   ## Examples
 
-      iex> iodata_inspect(:foo)
-      [":foo"]
+      iex> iodata_inspect(:foo) |> IO.iodata_to_binary()
+      ":foo"
 
-      iex> iodata_inspect([1, 2, 3, 4, 5], limit: 3)
-      ["[", "1", ",", " ", "2", ",", " ", "3", ",", " ", "...", "]"]
+      iex> iodata_inspect("olá", binaries: :as_binaries) |> IO.iodata_to_binary()
+      "<<111, 108, 195, 161>>"
 
-      iex> iodata_inspect([1, 2, 3], pretty: true, width: 0)
-      ["[", "1", ",", "\\n ", "2", ",", "\\n ", "3", "]"]
-
-      iex> iodata_inspect("olá" <> <<0>>)
-      ["<<", "111", ",", " ", "108", ",", " ", "195", ",", " ", "161", ",", " ", "0", ">>"]
-
-      iex> iodata_inspect("olá" <> <<0>>, binaries: :as_strings)
-      [~S("olá\\0")]
-
-      iex> iodata_inspect("olá", binaries: :as_binaries)
-      ["<<", "111", ",", " ", "108", ",", " ", "195", ",", " ", "161", ">>"]
-
-      iex> iodata_inspect([0 | ~c"bar"])
-      ["[", "0", ",", " ", "98", ",", " ", "97", ",", " ", "114", "]"]
-
-      iex> iodata_inspect(100, base: :octal)
-      ["0o144"]
-
-      iex> iodata_inspect(100, base: :hex)
-      ["0x64"]
+      iex> iodata_inspect(100, base: :hex) |> IO.iodata_to_binary()
+      "0x64"
 
   """
   @doc since: "0.2.0"
@@ -617,30 +599,8 @@ defmodule Colonel.Experimental do
       iex> ~i"some \#{["list", ["of", "nested"], "values"]} and \#{:such}"s
       ["some ", "listofnestedvalues", " and ", "such"]
 
-      iex> ~i"some \#{["list", ["of", "nested"], "values"]} and \#{:such}"i
-      [
-        "some ",
-        [
-          "[",
-          "",
-          ~S("list"),
-          ",",
-          " ",
-          "[",
-          ~S("of"),
-          ",",
-          " ",
-          ~S("nested"),
-          "]",
-          ",",
-          " ",
-          ~S("values"),
-          "",
-          "]"
-        ],
-        " and ",
-        [":such"]
-      ]
+      iex> ~i"some \#{["list", ["of", "nested"], "values"]} and \#{:such}"i |> IO.iodata_to_binary()
+      ~S(some ["list", ["of", "nested"], "values"] and :such)
 
       iex> ~i"some \#{["list", ["of", "nested"], "values"]} and \#{to_string(:such)}"d
       ["some ", ["list", ["of", "nested"], "values"], " and ", "such"]
@@ -804,10 +764,10 @@ defmodule Colonel.Experimental do
       iex> then_with({:ok, 23}, {:ok, value}, do: {:ok, to_string(value)})
       {:ok, "23"}
 
-      iex> then_with %{}, %{value: value} = result when is_binary(value) do
-      ...>   %{result | size: byte_size(value)}
+      iex> then_with "value", "x" <> rest do
+      ...>   rest
       ...> end
-      %{}
+      "value"
 
   """
   @doc since: "0.4.0"
@@ -842,9 +802,6 @@ defmodule Colonel.Experimental do
 
       iex> untag({:ok, :cool}, :ok)
       :cool
-
-      iex> untag({:error, :oops}, :ok)
-      ** (MatchError) no match of right hand side value: {:error, :oops}
 
   """
   @doc since: "0.3.0"

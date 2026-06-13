@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Deprecate Colonel.Experimental.iodata_inspect/2
+
+In Elixir 1.19, `Inspect.Algebra.format/2` started building binaries instead of iodata, so this function now returns the same thing as `Kernel.inspect/2`.
+
 ### Don't suggest and/or aliases return booleans
 
 `Colonel.Experimental.and?/2` and `Colonel.Experimental.or?/2` may return boolean values, but they

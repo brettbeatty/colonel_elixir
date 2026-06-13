@@ -217,6 +217,7 @@ defmodule Colonel.Experimental do
 
   """
   @doc since: "0.2.0"
+  @doc deprecated: "As of Elixir 1.19, Inspect.Algebra.format/2 builds binaries instead of iodata"
   @spec iodata_inspect(Inspect.t(), keyword()) :: iodata()
   def iodata_inspect(term, opts \\ []) when is_list(opts) do
     opts = Inspect.Opts.new(opts)

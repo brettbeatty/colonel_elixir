@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Multi-pattern matching
+
+Elixir's `case` requires a separate clause for each pattern. When separate patterns are treated similarly, sometimes guards like `where value in value_class` can replace matching each pattern, but sometimes the predicate needs repeated for each pattern.
+
+`Colonel.Experimental.cases/2` works like `case` except it allows multiple patterns per clause.
+
 ### Deprecate Colonel.Experimental.iodata_inspect/2
 
 In Elixir 1.19, `Inspect.Algebra.format/2` started building binaries instead of iodata, so this function now returns the same thing as `Kernel.inspect/2`.

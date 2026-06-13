@@ -88,6 +88,65 @@ defmodule Colonel.Experimental do
   end
 
   @doc """
+  Match an expression against one of many patterns.
+
+  It's the same as `case/2`, except it allows multiple patterns per clause. Within a clause,
+  patterns are matched left-to-right.
+
+  ## Examples
+
+      cases status do
+        :accepted, :completed -> :ok
+        :rejected -> :error
+      end
+
+  The above example is equivalent to the following `case/2` expression:
+
+      case status do
+        :accepted -> :ok
+        :completed -> :ok
+        :rejected -> :error
+      end
+
+  Each pattern can have its own guards.
+
+      cases result do
+        {:ok, %{status: status} = reason} when status >= 400, {:error, reason} ->
+          {:error, reason}
+
+        {:ok, response} ->
+          {:ok, response}
+      end
+
+  """
+  defmacro cases(condition, [do: block] = _clasues) do
+    clauses =
+      Enum.flat_map(block, fn {:->, meta, [matches, clause]} ->
+        matches =
+          with [{:when, meta, [_, _, _ | _] = patterns}] <- matches do
+            cases_push_down_guard(patterns, meta)
+          end
+          
+          Enum.map(matches, fn match -> {:->, meta, [[match], clause]} end)
+      end)
+
+    quote do
+      case unquote(condition), do: unquote(clauses)
+    end
+  end
+
+  @spec cases_push_down_guard([Macro.t()], Macro.metadata()) :: [Macro.t()]
+  defp cases_push_down_guard(patterns, meta)
+
+  defp cases_push_down_guard([pattern, guard], meta) do
+    [{:when, meta, [pattern, guard]}]
+  end
+
+  defp cases_push_down_guard([pattern | patterns], meta) do
+    [pattern | cases_push_down_guard(patterns, meta)]
+  end
+
+  @doc """
   Delete from structure if condition is met.
 
   Uses the `Access` behaviour to perform the delete, so keys are a list as with

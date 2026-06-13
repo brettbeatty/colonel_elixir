@@ -123,11 +123,11 @@ defmodule Colonel.Experimental do
     clauses =
       Enum.flat_map(block, fn {:->, meta, [matches, clause]} ->
         matches =
-          with [{:when, meta, [_, _, _ | _] = patterns}] <- matches do
+          with [{:when, meta, [_a, _b, _c | _tail] = patterns}] <- matches do
             cases_push_down_guard(patterns, meta)
           end
-          
-          Enum.map(matches, fn match -> {:->, meta, [[match], clause]} end)
+
+        Enum.map(matches, fn match -> {:->, meta, [[match], clause]} end)
       end)
 
     quote do

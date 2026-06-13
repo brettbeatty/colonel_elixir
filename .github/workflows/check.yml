@@ -16,7 +16,7 @@ jobs:
     name: OTP ${{ matrix.otp_version }} / Elixir ${{ matrix.elixir_version }}
     strategy:
       matrix:
-        elixir_version: [1.18, 1.19, 1.20]
+        elixir_version: ['1.18', '1.19', '1.20']
         otp_version: [27, 28, 29]
         exclude:
           - elixir_version: 1.18
